@@ -1,2 +1,3 @@
-# backjon_algorithm
-This is a auto push repository for Baekjoon Online Judge created with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub).
+# 알고리즘 연습
+1. 프로그래머스와 백준은 코드만 저장되어 있습니다. 필요시 혹은 제가 헷갈린 경우 블로그에 따로 정리주입니다
+2. leetcode는 note.md에 내용을 주로 적고 있습니다. 왜 이렇게 했는지 무슨 삽질을 했는지 적는 중입니다.
