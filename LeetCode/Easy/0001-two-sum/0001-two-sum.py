@@ -1,16 +1,8 @@
 class Solution:
     def twoSum(self, nums: list, target):
-        # nums.sort()
-        result = []
-        while nums:
-            index = -1
-            try:
-                index = nums.index(target - nums.pop())
-            except:
-                pass
-            if index != -1:
-                result = [index, len(nums)]
-                # nums.pop(index)
-                break
-
-        return result
+        has_map = {}
+        for i in range(len(nums)):
+            value = target - nums[i]
+            if value in has_map:
+                return [i, has_map[value]]
+            has_map[nums[i]] = i
