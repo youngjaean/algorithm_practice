@@ -1,7 +1,6 @@
 class Solution:
     def isPalindrome(self, x: int) -> bool:
-        x = list(str(x))
-        if x == list(reversed(x)):
-            return True
-        else:
+        if x < 0:
             return False
+
+        return str(x) == str(x)[::-1]
