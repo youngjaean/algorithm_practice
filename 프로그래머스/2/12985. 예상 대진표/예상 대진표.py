@@ -1,8 +1,11 @@
-def solution(n,a,b):
+def solution(n, a, b):
     answer = 1
-    a,b = min(a,b),max(a,b)
-    while not (a%2==1 and b%2==0 and a+1==b):
+    min_value = min(a, b)
+    max_value = max(a, b)
+    while not (
+        min_value % 2 == 1 and max_value % 2 == 0 and max_value - min_value == 1
+    ):
         answer += 1
-        a = a//2 + a%2
-        b = b//2 + b%2
+        min_value = min_value // 2 + min_value % 2
+        max_value = max_value // 2 + max_value % 2
     return answer
