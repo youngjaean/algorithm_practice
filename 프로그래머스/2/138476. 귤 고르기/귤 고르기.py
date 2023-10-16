@@ -1,18 +1,19 @@
-from collections import defaultdict
+from collections import Counter
 
 
 def solution(k, tangerine):
-    tangerine_dcit = defaultdict(int)
-    for tan in tangerine:
-        tangerine_dcit[tan] += 1
-    answer = 0
-    numbuer = 0
-    tangerine_dcit = sorted(tangerine_dcit.items(), key=lambda k: k[1], reverse=True)
 
-    for _, value in tangerine_dcit:
-        if numbuer < k:
-            numbuer += value
+
+    tangerine_num = Counter(tangerine)
+    answer = 0
+    num = 0
+    for value in sorted(tangerine_num.values(), reverse=True):
+        if num < k:
+            num += value
             answer += 1
         else:
             break
     return answer
+
+
+print(solution(6, [1, 3, 2, 5, 4, 5, 2, 3]))
