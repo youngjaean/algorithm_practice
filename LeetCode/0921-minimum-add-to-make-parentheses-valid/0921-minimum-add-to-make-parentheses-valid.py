@@ -1,13 +1,13 @@
 class Solution:
     def minAddToMakeValid(self, s: str) -> int:
-        opening = []
+        opening = 0
         closing = 0
         for ch in s:
             if ch == "(":
-                opening.append(ch)
+                opening += 1
             else:
                 if opening:
-                    opening.pop()
+                    opening -= 1
                 else:
                     closing += 1
 
