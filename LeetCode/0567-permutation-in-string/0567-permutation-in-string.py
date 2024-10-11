@@ -1,12 +1,20 @@
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
-        cnt = Counter(s1)
+        len_s1, len_s2 = len(s1), len(s2)
+        
+        s1_count = Counter(s1)
+        window_count = Counter(s2[:len_s1])
+        if s1_count == window_count:
+            return True
 
-        for i in range(len(s2)):
-            cnt_s2 = Counter(s2[i : i + len(s1)])
-
-            if cnt == cnt_s2:
+        for i in range(len_s1, len_s2):
+            window_count[s2[i]] += 1
+            left_char = s2[i - len_s1]
+            window_count[left_char] -= 1
+            if window_count[left_char] == 0:
+                del window_count[left_char]
+  
+            if s1_count == window_count:
                 return True
-
+        
         return False
-
