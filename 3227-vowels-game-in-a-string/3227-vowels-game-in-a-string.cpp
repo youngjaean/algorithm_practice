@@ -15,10 +15,6 @@ public:
             }
         }
 
-        if (vowels != 0)
-            return true;
-        
-        else
-            return false;
+        return vowels == 1;
     }
 };
