@@ -5,16 +5,12 @@ public:
     }
 
     bool doesAliceWin(string s) {
-        int turn = 1;
-        int vowels = 0;
-
         for(auto c : s){
             if(checker(c)){
-                vowels += 1;
-                break;
+                return true;
             }
         }
 
-        return vowels == 1;
+        return false;
     }
 };
