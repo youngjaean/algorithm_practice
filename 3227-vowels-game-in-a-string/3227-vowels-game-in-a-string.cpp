@@ -9,8 +9,10 @@ public:
         int vowels = 0;
 
         for(auto c : s){
-            if(checker(c))
+            if(checker(c)){
                 vowels += 1;
+                break;
+            }
         }
 
         if (vowels != 0)
