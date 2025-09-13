@@ -1,40 +1,27 @@
+
 class Solution
 {
 public:
     int maxFreqSum(string s)
     {
-        unordered_map<char, int> vowels;
-        unordered_map<char, int> consonants;
+        unordered_map<char, int> string_map;
+        int count_vowels = 0;
+        int count_consonants = 0;
 
         for (auto c : s)
         {
             if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u')
             {
-                vowels[c] += 1;
+                string_map[c] += 1;
+                count_vowels = max(count_vowels, string_map[c]);
             }
             else
             {
-                consonants[c] += 1;
+                string_map[c] += 1;
+                count_consonants = max(count_consonants, string_map[c]);
             }
         }
-        int maxVowelFreq = 0;
-        if (!vowels.empty())
-        {
-            maxVowelFreq = max_element(vowels.begin(), vowels.end(),
-                                       [](const pair<char, int> &a, const pair<char, int> &b)
-                                       { return a.second < b.second; })
-                               ->second;
-        }
 
-        int maxConsonantFreq = 0;
-        if (!consonants.empty())
-        {
-            maxConsonantFreq = max_element(consonants.begin(), consonants.end(),
-                                           [](const pair<char, int> &a, const pair<char, int> &b)
-                                           { return a.second < b.second; })
-                                   ->second;
-        }
-
-        return maxVowelFreq + maxConsonantFreq;
+        return count_vowels + count_consonants;
     }
 };
