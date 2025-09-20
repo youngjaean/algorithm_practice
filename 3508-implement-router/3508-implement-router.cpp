@@ -2,15 +2,14 @@
 #include <set>
 #include <queue>
 #include <unordered_map>
-#include <deque>
-#include <algorithm>
 using namespace std;
 
 class Router
 {
     set<vector<int>> mpp;
     queue<vector<int>> router;
-    unordered_map<int, deque<int>> timestamps;
+    unordered_map<int, vector<int>> timestamps;
+    unordered_map<int, int> st;
     int maxSize = 0;
 
 public:
@@ -29,7 +28,8 @@ public:
         {
             vector<int> res = router.front();
             mpp.erase(res);
-            timestamps[res[1]].pop_front();
+            int temp = res[1];
+            st[temp]++;
             router.pop();
         }
 
@@ -46,7 +46,8 @@ public:
         vector<int> res = router.front();
         router.pop();
         mpp.erase(res);
-        timestamps[res[1]].pop_front();
+        int temp = res[1];
+        st[temp]++;
         return res;
     }
 
@@ -55,8 +56,9 @@ public:
         if (timestamps.find(destination) == timestamps.end())
             return 0;
         auto &p = timestamps[destination];
-        auto right = lower_bound(p.begin(), p.end(), startTime);
-        auto left = upper_bound(p.begin(), p.end(), endTime);
+        int temp = st[destination];
+        auto right = lower_bound(p.begin() + temp, p.end(), startTime);
+        auto left = upper_bound(p.begin() + temp, p.end(), endTime);
         return int(left - right);
     }
 };
