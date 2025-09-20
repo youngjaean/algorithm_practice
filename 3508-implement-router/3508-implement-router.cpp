@@ -1,12 +1,12 @@
 #include <vector>
-#include <map>
+#include <set>
 #include <queue>
 #include <unordered_map>
 using namespace std;
 
 class Router
 {
-    map<vector<int>, int> mpp;
+    set<vector<int>> mpp;
     queue<vector<int>> router;
     unordered_map<int, vector<int>> timestamps;
     unordered_map<int, int> st;
@@ -34,7 +34,7 @@ public:
         }
 
         router.push(packet);
-        mpp[packet]++;
+        mpp.insert(packet);
         timestamps[destination].push_back(timestamp);
         return true;
     }
@@ -62,11 +62,3 @@ public:
         return int(left - right);
     }
 };
-
-/**
- * Your Router object will be instantiated and called as such:
- * Router* obj = new Router(memoryLimit);
- * bool param_1 = obj->addPacket(source,destination,timestamp);
- * vector<int> param_2 = obj->forwardPacket();
- * int param_3 = obj->getCount(destination,startTime,endTime);
- */
