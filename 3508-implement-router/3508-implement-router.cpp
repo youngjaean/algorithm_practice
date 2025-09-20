@@ -1,82 +1,41 @@
 #include <vector>
 #include <map>
-#include <unordered_set>
+#include <queue>
+#include <unordered_map>
 using namespace std;
 
 class Router
 {
+    map<vector<int>, int> mpp;
+    queue<vector<int>> router;
+    unordered_map<int, vector<int>> timestamps;
+    unordered_map<int, int> st;
+    int maxSize = 0;
+
 public:
-    int memoryLimit = 0;
-    int checkLimit = 0;
-    bool isLimit = false;
-    vector<vector<int>> router;
-    map<int, vector<int>> destinaitonCheck;
-    unordered_set<string> packetSet;
-
-    string makeKey(int source, int destination, int timestamp)
+    Router(int memoryLimit) : maxSize(memoryLimit)
     {
-        return to_string(source) + "_" + to_string(destination) + "_" + to_string(timestamp);
-    }
-
-    Router(int memoryLimit)
-    {
-        this->memoryLimit = memoryLimit;
     }
 
     bool addPacket(int source, int destination, int timestamp)
     {
-        string key = makeKey(source, destination, timestamp);
-
-        if (packetSet.find(key) != packetSet.end())
-        {
+        vector<int> packet = {source,
+                              destination,
+                              timestamp};
+        if (mpp.count(packet))
             return false;
-        }
-
-        if (checkLimit == memoryLimit)
-            isLimit = true;
-
-        if (isLimit)
+        if (router.size() == maxSize)
         {
-            if (!router.empty())
-            {
-                string oldKey = makeKey(router[0][0], router[0][1], router[0][2]);
-                packetSet.erase(oldKey);
-                router.erase(router.begin());
-            }
-
-            for (auto it = destinaitonCheck.begin(); it != destinaitonCheck.end();)
-            {
-                auto &values = it->second;
-
-                values.erase(
-                    remove_if(values.begin(), values.end(),
-                              [](int &val)
-                              {
-                                  val -= 1;
-                                  return val < 0;
-                              }),
-                    values.end());
-
-                if (values.empty())
-                {
-                    it = destinaitonCheck.erase(it);
-                }
-                else
-                {
-                    ++it;
-                }
-            }
-
-            destinaitonCheck[destination].push_back(memoryLimit - 1);
-        }
-        else
-        {
-            destinaitonCheck[destination].push_back(checkLimit);
-            checkLimit += 1;
+            vector<int> res = router.front();
+            mpp.erase(res);
+            int temp = res[1];
+            st[temp]++;
+            router.pop();
         }
 
-        packetSet.insert(key); // 추가: packetSet에 삽입
-        router.push_back({source, destination, timestamp});
+        router.push(packet);
+        mpp[packet]++;
+        timestamps[destination].push_back(timestamp);
         return true;
     }
 
@@ -84,47 +43,30 @@ public:
     {
         if (router.empty())
             return {};
-
-        vector<int> answer = router[0];
-
-        string key = makeKey(answer[0], answer[1], answer[2]);
-        packetSet.erase(key);
-
-        router.erase(router.begin());
-
-        for (auto &pair : destinaitonCheck)
-        {
-            auto &indices = pair.second;
-            indices.erase(
-                remove_if(indices.begin(), indices.end(),
-                          [](int &val)
-                          {
-                              val -= 1;
-                              return val < 0;
-                          }),
-                indices.end());
-        }
-        checkLimit -= 1;
-
-        return answer;
+        vector<int> res = router.front();
+        router.pop();
+        mpp.erase(res);
+        int temp = res[1];
+        st[temp]++;
+        return res;
     }
 
     int getCount(int destination, int startTime, int endTime)
     {
-        if (destinaitonCheck.find(destination) == destinaitonCheck.end())
+        if (timestamps.find(destination) == timestamps.end())
             return 0;
-
-        vector<int> index = destinaitonCheck[destination];
-        int answer = 0;
-
-        for (auto i : index)
-        {
-            if (i >= 0 && i < router.size() &&
-                startTime < router[i][2] && router[i][2] < endTime) // 수정: && 사용
-            {
-                answer += 1;
-            }
-        }
-        return answer;
+        auto &p = timestamps[destination];
+        int temp = st[destination];
+        auto right = lower_bound(p.begin() + temp, p.end(), startTime);
+        auto left = upper_bound(p.begin() + temp, p.end(), endTime);
+        return int(left - right);
     }
 };
+
+/**
+ * Your Router object will be instantiated and called as such:
+ * Router* obj = new Router(memoryLimit);
+ * bool param_1 = obj->addPacket(source,destination,timestamp);
+ * vector<int> param_2 = obj->forwardPacket();
+ * int param_3 = obj->getCount(destination,startTime,endTime);
+ */
