@@ -6,6 +6,7 @@ using namespace std;
 class Solution {
 public:
     int triangleNumber(vector<int>& nums) {
+        if(n<3) return 0;
         sort(nums.begin(), nums.end());
         int answer = 0;
         for (int i = 0; i < nums.size() -1; i++)
