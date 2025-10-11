@@ -1,58 +1,48 @@
 #include <vector>
 #include <unordered_map>
-#include <iostream>
-using namespace std;
+#include <algorithm>
 
-class Solution
-{
+class Solution {
 public:
-    long long maximumTotalDamage(vector<int> &power)
-    {
-        sort(power.begin(), power.end());
-        vector<long long> tablula(power.size(), 0);
-        unordered_map<int, int> count_table;
-        tablula[0] = power[0];
-        count_table[power[0]] += 1;
+    long long maximumTotalDamage(std::vector<int>& power) {
+        std::unordered_map<int, long long> damageFrequency;
+        for (int damage : power) {
+            damageFrequency[damage]++;
+        }
 
-        for (int i = 1; i < power.size(); i++)
-        {
-            if (power[i - 1] == power[i])
-            {
-                tablula[i] = tablula[i - 1] + power[i];
-                count_table[power[i]] += 1;
-            }
-            else if (power[i - 1] < power[i] - 2)
-            {
-                tablula[i] = max(tablula[i - 1] + (long long)power[i], (long long)power[i]);
-                count_table[power[i]] += 1;
-            }
-            else
-            {
-                int skip_count = 0;
-                for (int val = power[i] - 2; val <= power[i]; val++)
-                {
-                    skip_count += count_table[val];
-                }
+        std::vector<int> uniqueDamages;
+        for (const auto& pair : damageFrequency) {
+            uniqueDamages.push_back(pair.first);
+        }
+        std::sort(uniqueDamages.begin(), uniqueDamages.end());
 
-                long long max_val = 0;
-                for (int j = 0; j < 3 && i - skip_count - j >= 0; j++)
-                {
-                    int idx = i - skip_count - j;
-                    if (idx >= 0 && idx < power.size())
-                    {
-                        int condidate_value = power[idx];
-                        if (condidate_value < power[i] - 2)
-                        {
-                            max_val = max(tablula[idx] + power[i], tablula[i - 1]);
-                            break;
-                        }
-                    }
-                }
-                tablula[i] = max(max_val, (long long)power[i]);
-                count_table[power[i]] += 1;
+        int totalUniqueDamages = uniqueDamages.size();
+        std::vector<long long> maxDamageDP(totalUniqueDamages, 0);
+
+        maxDamageDP[0] = uniqueDamages[0] * damageFrequency[uniqueDamages[0]];
+
+        for (int i = 1; i < totalUniqueDamages; i++) {
+            int currentDamageValue = uniqueDamages[i];
+            long long currentDamageTotal = currentDamageValue * damageFrequency[currentDamageValue];
+
+            maxDamageDP[i] = maxDamageDP[i - 1];
+
+            int previousIndex = i - 1;
+            while (previousIndex >= 0 && 
+                   (uniqueDamages[previousIndex] == currentDamageValue - 1 || 
+                    uniqueDamages[previousIndex] == currentDamageValue - 2 || 
+                    uniqueDamages[previousIndex] == currentDamageValue + 1 || 
+                    uniqueDamages[previousIndex] == currentDamageValue + 2)) {
+                previousIndex--;
+            }
+
+            if (previousIndex >= 0) {
+                maxDamageDP[i] = std::max(maxDamageDP[i], maxDamageDP[previousIndex] + currentDamageTotal);
+            } else {
+                maxDamageDP[i] = std::max(maxDamageDP[i], currentDamageTotal);
             }
         }
 
-        return tablula.back();
+        return maxDamageDP[totalUniqueDamages - 1];
     }
 };
