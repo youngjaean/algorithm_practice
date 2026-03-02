@@ -4,7 +4,6 @@ public:
         int n = grid.size();
         vector<int> maxRight(n, -1);
 
-        // 각 row의 가장 오른쪽 1의 index 찾기
         for (int i = 0; i < n; i++) {
             for (int j = n - 1; j >= 0; j--) {
                 if (grid[i][j] == 1) {
