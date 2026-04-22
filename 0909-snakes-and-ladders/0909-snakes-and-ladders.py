@@ -17,14 +17,12 @@ class Solution:
                 next_pos = pos + i
                 if next_pos > n * n:
                     continue
-
                 row, col = gen_grid(next_pos)
+
                 if board[row][col] != -1:
                     next_pos = board[row][col]
-
-                if next_pos == n * n:
+                if next_pos == n*n:
                     return move + 1
-
                 if next_pos not in vist:
                     vist.add(next_pos)
                     queu.append((next_pos, move + 1))
