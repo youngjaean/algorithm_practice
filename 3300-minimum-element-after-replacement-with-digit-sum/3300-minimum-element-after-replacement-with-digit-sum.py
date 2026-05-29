@@ -3,15 +3,7 @@ class Solution:
         min_num = float("inf")
 
         for num in nums:
-            tmp = 0
-
-            while 10 <= num:
-                value = num % 10
-                num = num // 10
-                tmp += value
-
-            tmp += num
-
-            min_num = min(min_num, tmp)
+            digit_sum = sum(int(ch) for ch in str(num))
+            min_num = min(min_num, digit_sum)
 
         return min_num
